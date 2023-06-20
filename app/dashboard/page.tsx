@@ -28,11 +28,9 @@ export default async function Dashboard() {
 	const isUserLoggedIn = useCallback(() => {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
-                getProducts(setProducts)
-                getCategories(setCategories)
-                getTotalSales(setTotalSales)
-                getSales(setSales)
-                setUser({ email: user.email, uid: user.uid });
+                   setUser({ email: user.email, uid: user.uid });
+                const promises = [getProducts(setProducts), getCategories(setCategories), getTotalSales(setTotalSales), getSales(setSales)];
+                await Promise.all(promises);
 			} else {
 				return router.push("/");
 			}
