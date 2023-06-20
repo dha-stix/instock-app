@@ -4,8 +4,8 @@ import { EmailAuthProvider } from "firebase/auth";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_KEY_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  apiKey: "AIzaSyCtmI3jLzqDSr3UIwuUdBa5ocsN5vjzpW8",
+  authDomain: "stock-taking-19198.firebaseapp.com",
   projectId: "stock-taking-19198",
   storageBucket: "stock-taking-19198.appspot.com",
   messagingSenderId: "228033001185",
