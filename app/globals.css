@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+.dim {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+.ReactCollapse--collapse {
+	transition: height 500ms;
+}
+tr,
+td,
+th {
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	padding: 10px;
+	text-align: left;
+	background-color: #fff;
+}
+
+table {
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+th {
+	background-color: #93c5fd;
+}
