@@ -15,7 +15,7 @@ interface User {
     uid: string | null
 }
     
-export default async function Dashboard() {
+export default function Dashboard() {
     const [addNew, setAddNew] = useState<boolean>(false)
     const [products, setProducts] = useState([])
     const [categories, setCategories] = useState([])
@@ -25,7 +25,7 @@ export default async function Dashboard() {
     const [user, setUser] = useState<User>()
     const router = useRouter()
     
-		const isUserLoggedIn = useCallback(() => {
+	const isUserLoggedIn = useCallback(() => {
 		onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser({ email: user.email, uid: user.uid });
