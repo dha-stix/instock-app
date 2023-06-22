@@ -2,7 +2,7 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "./firebase";
 import { toast } from "react-toastify";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
-import { doc, deleteDoc, onSnapshot, collection, addDoc, query, where, updateDoc, getDoc, serverTimestamp, orderBy, Timestamp } from "firebase/firestore";
+import { doc, deleteDoc, onSnapshot, collection, addDoc, query, where, serverTimestamp, orderBy, Timestamp } from "firebase/firestore";
 import db from "./firebase";
 
 export interface Items {
@@ -12,7 +12,15 @@ export interface Items {
     price: string,
     amount: string
 }
-
+export interface Item {
+    name: string,
+    id: string,
+    number_of_products: number
+}
+export interface User {
+    email: string | null,
+    uid: string | null
+}
 export interface Product {
     id: string,
     category: string,
@@ -20,7 +28,6 @@ export interface Product {
     quantity: string,
     name: string
 }
-
 export interface ProductItem {
  price: number,
   amount: string,
@@ -49,25 +56,6 @@ export function calculateTotalAmount(objectsArray: Items[]) {
   }
 
   return totalAmount;
-}
-export const separateString = (inputString: string) => {
-  const separatorIndex = inputString.indexOf("-");
-  if (separatorIndex !== -1) {
-    const firstPart = inputString.substring(0, separatorIndex);
-    const secondPart = inputString.substring(separatorIndex + 1);
-    return [firstPart, secondPart];
-  } else {
-    return [];
-  }
-}
-
-export const generateNumbersArray = (number: number) => {
-  const array = [];
-  for (let i = 1; i <= number; i++) {
-    array.push(i);
-  }
-  array.sort((a, b) => a - b);
-  return array;
 }
 
 export const successMessage = (message:string) => {
@@ -133,6 +121,7 @@ export const getCategories = async (setCategories: any) => {
 		setCategories([])
 	}
 }
+
 export const deleteCategory =  async (id: string, name:string) => {
 	try {
 		await deleteDoc(doc(db, "categories", id));
@@ -153,7 +142,7 @@ export const deleteCategory =  async (id: string, name:string) => {
 export const addCategory = async (name: string) => {
 	try {
 		await addDoc(collection(db, "categories"), {
-			name, number_of_products: 0
+			name
 		})
 		successMessage(`${name} category added! 🎉`)
 	} catch (err) {
@@ -164,28 +153,16 @@ export const addCategory = async (name: string) => {
 
 export const addProduct = async (name: string, price: number, category: string) => {
 	try {
-		const categoryDetails = separateString(category)
 		await addDoc(collection(db, "products"), {
-			name, price, category: categoryDetails[0]
+			name, price, category
 		})
-		const docRef = doc(db, "categories", categoryDetails[1]);
-		const docSnap = await getDoc(docRef);
-	if (docSnap.exists()) {
-		const categoryData = docSnap.data()
-		const categoryNumber = categoryData.number_of_products
-		const updatedValue = categoryNumber + 1
-
-		const categoryRef = doc(db, "categories", categoryDetails[1]);
-		await updateDoc(categoryRef, { number_of_products: updatedValue });
 		successMessage(`${name} product added! 🎉`)
-	} else {
-  			errorMessage("Error! Try again ❌")
-	}		
-		
-	} catch (err) {
+	}	
+		 catch (err) {
 		errorMessage("Error! ❌")
 		console.error(err)
-}
+	}
+
 }
 
 export const getProducts = async (setProducts: any) => {
@@ -202,6 +179,7 @@ export const getProducts = async (setProducts: any) => {
 		setProducts([])
 	}
 }
+
 export const deleteProduct =  async (id: string, name:string) => {
 	try {
 		await deleteDoc(doc(db, "products", id));

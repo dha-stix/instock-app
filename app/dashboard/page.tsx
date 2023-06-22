@@ -8,14 +8,10 @@ import { auth } from '@/firebase'
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation'
 import Loading from './Loading'
-import { Sales, getCategories, getProducts, getSales, getTotalSales } from '@/utils'
+import { Sales, getCategories, getProducts, getSales, getTotalSales, User } from '@/utils'
 
-interface User {
-    email: string | null,
-    uid: string | null
-}
     
-export default async function Dashboard() {
+export default function Dashboard() {
     const [addNew, setAddNew] = useState<boolean>(false)
     const [products, setProducts] = useState([])
     const [categories, setCategories] = useState([])
@@ -26,13 +22,12 @@ export default async function Dashboard() {
     const router = useRouter()
     
 	const isUserLoggedIn = useCallback(() => {
-		onAuthStateChanged(auth, (user) => {
-			if (user) {
-                getProducts(setProducts)
-                getCategories(setCategories)
-                getTotalSales(setTotalSales)
-                getSales(setSales)
+		onAuthStateChanged(auth, async (user) => {
+            if (user) {
                 setUser({ email: user.email, uid: user.uid });
+                const promises = [getProducts(setProducts), getCategories(setCategories), getTotalSales(setTotalSales), getSales(setSales)];
+                await Promise.all(promises);
+                
 			} else {
 				return router.push("/");
 			}

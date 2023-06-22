@@ -7,17 +7,8 @@ import { auth } from '@/firebase'
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation'
 import Loading from "../dashboard/Loading"
-import { addProduct, deleteProduct, getCategories, getProducts, separateString } from "@/utils"
+import { addProduct, deleteProduct, getCategories, getProducts, User, Item } from "@/utils"
 
-interface User {
-    email: string | null,
-    uid: string | null
-}
-interface Item {
-    name: string,
-    id: string,
-    number_of_products: number
-}
 interface Product {
     id: string,
     category: string,
@@ -87,7 +78,7 @@ export default function Home() {
                             <input className="border-b-[1px] px-4 py-2 w-1/3 rounded"
                                 type="number" placeholder="Price"
                                 name="price" id="price" required
-                                value={price}
+                                value={price.toString()}
                                 onChange={handlePrice}
                             />
 
@@ -97,7 +88,7 @@ export default function Home() {
                                
                                 <option value="select">Select Category</option>
                               {categories?.map((item: Item) =>(
-                                <option value={`${item.name}-${item.id}`} key={item.id}>{item.name}</option>
+                                <option value={item.name} key={item.id}>{item.name}</option>
                               ))}
                                 
                             </select>   
